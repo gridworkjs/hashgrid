@@ -14,35 +14,29 @@ npm install @gridworkjs/hashgrid
 
 ## Usage
 
+A particle simulation where thousands of uniform-sized particles need fast collision checks every frame:
+
 ```js
 import { createHashGrid } from '@gridworkjs/hashgrid'
-import { point, rect, bounds } from '@gridworkjs/core'
+import { point, bounds } from '@gridworkjs/core'
 
-// create a hash grid - cellSize should match your data's density
-const grid = createHashGrid(item => bounds(item.position), { cellSize: 50 })
+// particles are ~10 units across, so a 20-unit cell size works well
+const particles = createHashGrid(p => bounds(p.position), { cellSize: 20 })
 
-// insert items
-grid.insert({ id: 1, position: point(10, 20) })
-grid.insert({ id: 2, position: point(50, 60) })
-grid.insert({ id: 3, position: rect(70, 70, 90, 90) })
+particles.insert({ id: 'a', position: point(10, 20), vx: 1, vy: 0 })
+particles.insert({ id: 'b', position: point(15, 22), vx: -1, vy: 1 })
+particles.insert({ id: 'c', position: point(300, 400), vx: 0, vy: -1 })
 
-// search for items intersecting a region
-grid.search({ minX: 0, minY: 0, maxX: 55, maxY: 65 })
-// => [{ id: 1, ... }, { id: 2, ... }]
+// each frame, check for collisions near each particle
+const nearby = particles.search({ minX: 5, minY: 15, maxX: 25, maxY: 30 })
+// => [particle a, particle b]  - fast O(1) cell lookup
 
-// also accepts geometry objects as queries
-grid.search(rect(0, 0, 55, 65))
+// find the closest neighbor for attraction/repulsion forces
+particles.nearest({ x: 10, y: 20 }, 1)
+// => [particle b]
 
-// find nearest neighbors
-grid.nearest({ x: 12, y: 22 }, 2)
-// => [{ id: 1, ... }, { id: 2, ... }]
-
-// remove by identity
-grid.remove(item)
-
-grid.size   // number of items
-grid.bounds // bounding box of all items
-grid.clear()
+// particle leaves the simulation
+particles.remove(particleC)
 ```
 
 ## When to Use a Hash Grid
