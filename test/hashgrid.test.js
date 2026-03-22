@@ -480,3 +480,11 @@ describe('stress', () => {
     assert.equal(found.length, 100)
   })
 })
+
+describe('accessor property', () => {
+  it('exposes the accessor function', () => {
+    const fn = item => bounds(item.geo)
+    const grid = createHashGrid(fn, { cellSize: 10 })
+    assert.equal(grid.accessor, fn)
+  })
+})

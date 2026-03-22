@@ -25,7 +25,8 @@ const particles = createHashGrid(p => bounds(p.position), { cellSize: 20 })
 
 particles.insert({ id: 'a', position: point(10, 20), vx: 1, vy: 0 })
 particles.insert({ id: 'b', position: point(15, 22), vx: -1, vy: 1 })
-particles.insert({ id: 'c', position: point(300, 400), vx: 0, vy: -1 })
+const c = { id: 'c', position: point(300, 400), vx: 0, vy: -1 }
+particles.insert(c)
 
 // each frame, check for collisions near each particle
 const nearby = particles.search({ minX: 5, minY: 15, maxX: 25, maxY: 30 })
@@ -35,8 +36,8 @@ const nearby = particles.search({ minX: 5, minY: 15, maxX: 25, maxY: 30 })
 particles.nearest({ x: 10, y: 20 }, 1)
 // => [particle b]
 
-// particle leaves the simulation
-particles.remove(particleC)
+// particle leaves the simulation (by reference)
+particles.remove(c)
 ```
 
 ## When to Use a Hash Grid
