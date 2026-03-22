@@ -154,6 +154,8 @@ export function createHashGrid(accessor, options = {}) {
   const index = {
     [SPATIAL_INDEX]: true,
 
+    accessor,
+
     get size() { return size },
 
     get bounds() { return totalBounds },
