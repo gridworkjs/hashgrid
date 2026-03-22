@@ -1,0 +1,44 @@
+{
+  "name": "@gridworkjs/hashgrid",
+  "version": "1.0.0",
+  "description": "Spatial hash grid for uniform distributions and fast neighbor lookups",
+  "type": "module",
+  "main": "src/index.js",
+  "types": "./types/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./types/index.d.ts",
+      "default": "./src/index.js"
+    }
+  },
+  "scripts": {
+    "test": "node --test",
+    "prepublishOnly": "npx tsc --declaration --allowJs --emitDeclarationOnly --skipLibCheck --target es2020 --module nodenext --moduleResolution nodenext --strict false --esModuleInterop true --outDir ./types src/index.js"
+  },
+  "keywords": [
+    "hashgrid",
+    "spatial-hash",
+    "spatial",
+    "spatial-index",
+    "gridwork",
+    "uniform",
+    "collision",
+    "search",
+    "nearest-neighbor"
+  ],
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/gridworkjs/hashgrid.git"
+  },
+  "files": [
+    "src/",
+    "types/"
+  ],
+  "dependencies": {
+    "@gridworkjs/core": "^1.0.0"
+  },
+  "devDependencies": {
+    "typescript": "^5.9.3"
+  }
+}
