@@ -1,6 +1,6 @@
 {
   "name": "@gridworkjs/hashgrid",
-  "version": "1.1.0",
+  "version": "1.1.1",
   "description": "Spatial hash grid for uniform distributions and fast neighbor lookups",
   "type": "module",
   "main": "src/index.js",
