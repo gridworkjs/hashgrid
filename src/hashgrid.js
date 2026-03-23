@@ -3,11 +3,11 @@ import {
   intersects, distanceToPoint
 } from '@gridworkjs/core'
 
+/** @typedef {{ minX: number, minY: number, maxX: number, maxY: number }} Bounds */
+/** @typedef {{ x: number, y: number }} Point */
 /**
- * @typedef {{ minX: number, minY: number, maxX: number, maxY: number }} Bounds
- * @typedef {{ x: number, y: number }} Point
- * @typedef {(item: T) => Bounds} Accessor
  * @template T
+ * @typedef {(item: T) => Bounds} Accessor
  */
 
 /**
@@ -189,6 +189,7 @@ export function createHashGrid(accessor, options = {}) {
     remove(item) {
       const raw = accessor(item)
       const itemBounds = normalizeBounds(raw)
+      validateAccessorBounds(itemBounds)
       const { minCX, minCY, maxCX, maxCY } = cellRange(itemBounds)
 
       let entry = null
@@ -224,6 +225,10 @@ export function createHashGrid(accessor, options = {}) {
     search(query) {
       if (size === 0) return []
       const queryBounds = normalizeBounds(query)
+      if (!Number.isFinite(queryBounds.minX) || !Number.isFinite(queryBounds.minY) ||
+          !Number.isFinite(queryBounds.maxX) || !Number.isFinite(queryBounds.maxY)) {
+        throw new Error('search requires bounds with finite values')
+      }
       const { minCX, minCY, maxCX, maxCY } = cellRange(queryBounds)
 
       const results = []
@@ -251,6 +256,9 @@ export function createHashGrid(accessor, options = {}) {
 
       const px = queryPoint.x
       const py = queryPoint.y
+      if (!Number.isFinite(px) || !Number.isFinite(py)) {
+        throw new Error('nearest requires a point with finite x and y')
+      }
 
       const results = []
       const seen = new Set()

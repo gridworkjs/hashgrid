@@ -72,6 +72,31 @@ describe('input validation', () => {
     const grid = createHashGrid(() => ({ minX: 10, minY: 0, maxX: 5, maxY: 10 }), { cellSize: 10 })
     assert.throws(() => grid.insert({}), /inverted/)
   })
+
+  it('throws on NaN bounds from accessor during remove', () => {
+    let callCount = 0
+    const badAccessor = () => {
+      callCount++
+      if (callCount === 1) return { minX: 0, minY: 0, maxX: 10, maxY: 10 }
+      return { minX: NaN, minY: 0, maxX: 10, maxY: 10 }
+    }
+    const grid = createHashGrid(badAccessor, { cellSize: 10 })
+    const item = {}
+    grid.insert(item)
+    assert.throws(() => grid.remove(item), /non-finite/)
+  })
+
+  it('throws on NaN point in nearest', () => {
+    const grid = createHashGrid(accessor, { cellSize: 10 })
+    grid.insert({ id: 0, geo: point(10, 10) })
+    assert.throws(() => grid.nearest({ x: NaN, y: 0 }), /nearest requires a point with finite x and y/)
+  })
+
+  it('throws on NaN bounds in search', () => {
+    const grid = createHashGrid(accessor, { cellSize: 10 })
+    grid.insert({ id: 0, geo: point(10, 10) })
+    assert.throws(() => grid.search({ minX: NaN, minY: 0, maxX: 10, maxY: 10 }), /search requires bounds with finite values/)
+  })
 })
 
 describe('insert and size', () => {
